@@ -1,20 +1,21 @@
 {
-  "name": "14_sprint",
+  "name": "15_sprint",
   "version": "1.0.1",
-  "description": "14_sprint",
+  "description": "15_sprint",
   "main": "app.js",
   "scripts": {
+    "test": "jest",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon --exec 'node -r dotenv/config' app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MaximMaslovVik/14_sprint.git"
+    "url": "git+https://github.com/MaximMaslovVik/15_sprint.git"
   },
   "author": "Maslov Maxim",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MaximMaslovVik/14_sprint/issues"
+    "url": "https://github.com/MaximMaslovVik/15_sprint/issues"
   },
   "homepage": "",
   "devDependencies": {
@@ -25,11 +26,13 @@
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.17.0",
     "express": "^4.17.1",
-    "gh-pages": "^2.1.1",
+    "gh-pages": "^2.0.1",
     "jest": "^25.1.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "authorization-header": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -47,8 +50,8 @@
     "express-session": "^1.17.0",
     "express-validator": "^6.3.1",
     "file-loader": "^4.3.0",
+    "gh-pages": "^2.0.1",
     "git": "^0.1.5",
-    "gh-pages": "~2.0.1",
     "jshint": "^2.11.0-rc1",
     "jsonwebtoken": "^8.5.1",
     "mongod": "^2.0.0",
