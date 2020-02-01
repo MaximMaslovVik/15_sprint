@@ -1,0 +1,63 @@
+{
+  "name": "14_sprint",
+  "version": "1.0.1",
+  "description": "14_sprint",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximMaslovVik/14_sprint.git"
+  },
+  "author": "Maslov Maxim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaximMaslovVik/14_sprint/issues"
+  },
+  "homepage": "",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "autoprefixer": "^9.7.1",
+    "cross-env": "^6.0.3",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.17.0",
+    "express": "^4.17.1",
+    "gh-pages": "^2.1.1",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "authorization-header": "^0.2.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie": "^0.4.0",
+    "cookie-parser": "^1.4.4",
+    "cookies": "^0.8.0",
+    "core-js": "^3.1.4",
+    "crypto": "^1.0.1",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "escape-html": "^1.0.3",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.19.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "express-validator": "^6.3.1",
+    "file-loader": "^4.3.0",
+    "git": "^0.1.5",
+    "gh-pages": "~2.0.1",
+    "jshint": "^2.11.0-rc1",
+    "jsonwebtoken": "^8.5.1",
+    "mongod": "^2.0.0",
+    "mongodb": "^3.4.1",
+    "mongoose": "^5.8.5",
+    "mongoose-validator": "^2.1.0",
+    "node": "^13.3.0",
+    "passport": "^0.4.1",
+    "postman": "^0.2.0",
+    "validator": "^12.1.0"
+  }
+}
