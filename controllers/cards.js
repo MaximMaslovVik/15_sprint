@@ -1,10 +1,15 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
+
+const { ObjectId } = mongoose.Types;
+
+const NotFoundError = require('../errors/error_not_found');
 
 module.exports.getAllCards = (req, res) => {
   Card.find({})
     .then((card) => {
       if (card.length === 0) {
-        return res.status(404).send({ message: 'База данных cards пуста! ' });
+        throw new NotFoundError('База данных карточек пуста!');
       }
       return res.send({ data: card });
     })
@@ -19,18 +24,24 @@ module.exports.createCard = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Не удается создать карточку' }));
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const ownerId = req.user._id;
-  Card.findById(cardId)
+  if (!ObjectId.isValid(cardId)) {
+    return res.status(404).send({ message: 'not found' });
+  }
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner.toString() === ownerId) {
-        Card.findByIdAndRemove(cardId)
-          .then((card) => res.send({ data: card }))
-          .catch(() => errorSend(res));
+      if (card) {
+        if (card.owner.toString() === req.user._id) {
+          Card.findByIdAndRemove(req.params.cardId)
+            .then((cardRemove) => res.send({ remove: cardRemove }))
+            .catch(next);
+        } else {
+          next(new NotFoundError('Это не ваша карта'));
+        }
       } else {
-        return res.status(401).send({ message: 'Вы не имеете доступ к удалению чужих карточек' });
+        next(new NotFoundError('Карта не найдена'));
       }
     })
-    .catch(() => res.status(404).send({ message: 'Не найден объект с таким идентификатором' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };

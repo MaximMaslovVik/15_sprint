@@ -1,9 +1,12 @@
 const router = require('express').Router();
-const { getAllUsers, createUser, getUser, login } = require('../controllers/users');
+const { celebrate, Joi } = require('celebrate');
+const { getAllUsers, getUser } = require('../controllers/users');
 
 router.get('/users', getAllUsers);
-router.get('/users/:userId', getUser);
-router.post('/signin', login);
-router.post('/signup', createUser);
+router.get('/users/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), getUser);
 
 module.exports = router;

@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     select: false,
     required: true,
-    minlength: 10,
+    minlength: 8,
   },
   email: {
     type: String,
@@ -53,6 +53,12 @@ userSchema.statics.findUserByCredentials = function check(email, password) {
           return user;
         });
     });
+};
+
+userSchema.methods.omitPrivate = function omitPrivate() {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
 };
 
 module.exports = mongoose.model('user', userSchema);
