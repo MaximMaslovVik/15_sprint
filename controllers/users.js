@@ -18,12 +18,11 @@ module.exports.getAllUsers = (req, res) => {
       }
       return res.send({ data: user });
     })
-    .catch((error) => res.status(500).send({ message: error.message }));
+    .catch((new Error500('На сервере произошла ошибка')));
 };
 
 module.exports.createUser = (req, res) => {
   const {
-
     name, about, avatar, email, password,
   } = req.body;
   if (password.length > 11) {
@@ -32,7 +31,7 @@ module.exports.createUser = (req, res) => {
         name, about, avatar, email, password: hash,
       }))
       .then((user) => res.send({ data: user.omitPrivate() }))
-      .catch(() => res.status(500).send({ message: 'Не удалось создать пользователя' }));
+      .catch((new Error500('Не удалось создать пользователя')));
   } else {
     throw new Error500({ message: 'Слишком короткий пароль!' });
   }
@@ -47,7 +46,7 @@ module.exports.getUser = (req, res) => {
         res.send({ userId });
       }
     })
-    .catch(() => res.status(500).send({ message: 'Нет пользователя с таким id' }));
+    .catch((new Error500('Нет пользователя с таким id')));
 };
 
 module.exports.login = (req, res) => {
