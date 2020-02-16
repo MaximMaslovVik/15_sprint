@@ -21,14 +21,13 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-
 app.use(cookieParser());
 
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
-    throw new Error('Загрузка сервера  пре');
+    throw new Error('Что то пошло не так, загрузка сервера  прервана');
   }, 0);
 });
 
@@ -49,9 +48,6 @@ app.post('/signin', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), login);
-
-
-app.use(errorLogger);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
