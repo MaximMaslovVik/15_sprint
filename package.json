@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "node app.js",
     "dev": "nodemon --exec 'node -r dotenv/config' app.js"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MaximMaslovVik/15_sprint.git"
