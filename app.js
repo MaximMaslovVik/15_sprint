@@ -25,12 +25,6 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Что то пошло не так, загрузка сервера  прервана');
-  }, 0);
-});
-
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -40,14 +34,6 @@ app.post('/signup', celebrate({
     avatar: Joi.string().required(),
   }),
 }), createUser);
-
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -60,8 +46,18 @@ app.use(auth);
 app.use('/', users);
 app.use('/', cards);
 
-app.use(errorLogger);
-app.use(errors());
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Что то пошло не так, загрузка сервера  прервана');
+  }, 0);
+});
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
 
 app.all('/*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 
@@ -69,5 +65,8 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).send({ message: err.message });
   next();
 });
+
+app.use(errorLogger);
+app.use(errors());
 
 app.listen(PORT, () => {});
