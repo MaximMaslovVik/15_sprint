@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const NotFoundError = require('../errors/error_not_found');
-const Error500 = require('../errors/500');
-
+const Error500 = require('../errors/error_500');
+const Error401 = require('../errors/error_Auth');
 const User = require('../models/user');
 
 const { JWT_SECRET } = require('../secret.js');
@@ -14,7 +14,7 @@ module.exports.getAllUsers = (req, res) => {
   User.find({})
     .then((user) => {
       if (user.length === 0) {
-        return res.status(404).send({ message: 'База данных user пуста! ' });
+        return (new NotFoundError({ message: 'База данных user пуста! ' }));
       }
       return res.send({ data: user });
     })
@@ -31,9 +31,7 @@ module.exports.createUser = (req, res) => {
         name, about, avatar, email, password: hash,
       }))
       .then((user) => res.send({ data: user.omitPrivate() }))
-      .catch((new Error500('Не удалось создать пользователя')));
-  } else {
-    throw new Error500({ message: 'Слишком короткий пароль!' });
+      .catch(new Error500('Не удалось создать пользователя'));
   }
 };
 
@@ -46,7 +44,7 @@ module.exports.getUser = (req, res) => {
         res.send({ userId });
       }
     })
-    .catch((new Error500('Нет пользователя с таким id')));
+    .catch(new Error500('Нет пользователя с таким id'));
 };
 
 module.exports.login = (req, res) => {
@@ -63,7 +61,5 @@ module.exports.login = (req, res) => {
         .send(token)
         .end();
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(new Error401('Ошибка ввода'));
 };

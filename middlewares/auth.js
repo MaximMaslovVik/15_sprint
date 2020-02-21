@@ -3,22 +3,16 @@ const jwt = require('jsonwebtoken');
 
 const express = require('express');
 
-const { JWT_SECRET } = require('../secret.js');
+const { JWT_SECRET } = require('../secret');
+const Error401 = require('../errors/error_Auth');
 
 const app = express();
 app.use(cookieParser());
 
-function errorStatus(res) {
-  return res
-    .status(401)
-    .send({ message: 'Доступ запрещен. Необходима авторизация' });
-}
-
 module.exports = (req, res, next) => {
   const cookie = req.cookies.jwt;
-
   if (!cookie) {
-    errorStatus(res);
+    return next(new Error401('Доступ запрещен. Необходима авторизация'));
   }
 
   let payload;
@@ -27,7 +21,7 @@ module.exports = (req, res, next) => {
     payload = jwt.verify(cookie, JWT_SECRET);
     req.user = payload;
   } catch (err) {
-    errorStatus(res);
+    return next(new Error401('Доступ запрещен. Необходима авторизация'));
   }
 
   next();

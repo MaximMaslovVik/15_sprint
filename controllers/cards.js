@@ -4,7 +4,7 @@ const Card = require('../models/card');
 const { ObjectId } = mongoose.Types;
 
 const NotFoundError = require('../errors/error_not_found');
-const Error500 = require('../errors/500');
+const Error500 = require('../errors/error_500');
 
 module.exports.getAllCards = (req, res) => {
   Card.find({})
@@ -14,21 +14,21 @@ module.exports.getAllCards = (req, res) => {
       }
       return res.send({ data: card });
     })
-    .catch((error) => res.status(500).send({ message: error.message }));
+    .catch(new Error500('Ошибка сервера'));
 };
 
 module.exports.createCard = (req, res) => {
   const owner = req.user._id;
   const { name, link } = req.body;
-  Card.create({ name, link, owner })
+  Card.create({ name, link })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Не удается создать карточку' }));
+    .catch(new Error500({ message: 'Не удается создать карточку' }));
 };
 
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   if (!ObjectId.isValid(cardId)) {
-    return res.status(404).send({ message: 'not found' });
+    return (new NotFoundError({ message: 'not found' }));
   }
   Card.findById(req.params.cardId)
     .then((card) => {
