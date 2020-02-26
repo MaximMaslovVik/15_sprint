@@ -25,22 +25,20 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2),
-    avatar: Joi.string().required(),
   }),
 }), createUser);
 
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.post('/signin', login);
-app.post('/signup', createUser);
 
 app.use(auth);
 app.use('/', users);
