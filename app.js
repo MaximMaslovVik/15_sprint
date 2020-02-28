@@ -14,6 +14,13 @@ const cards = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 
+const schema = Joi.string().uri ({
+  scheme: [
+    'git',
+    / git \ + https? /
+  ];
+});
+
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -35,10 +42,16 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2),
+    avatar: Joi.string().uri().required(),
   }),
 }), createUser);
 
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
 
 app.use(auth);
 app.use('/', users);
@@ -59,12 +72,12 @@ app.post('/signin', celebrate({
 
 app.all('/*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 
+app.use(errorLogger);
+app.use(errors());
+
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).send({ message: err.message });
   next();
 });
-
-app.use(errorLogger);
-app.use(errors());
 
 app.listen(PORT, () => {});
