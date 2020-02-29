@@ -14,13 +14,6 @@ const cards = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 
-const schema = Joi.string().uri ({
-  scheme: [
-    'git',
-    / git \ + https? /
-  ];
-});
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
