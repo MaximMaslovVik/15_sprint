@@ -1,1 +1,2 @@
-module.exports.JWT_SECRET = 'b24076852c7c534c77ce7b233022026ffc663393b557432496f2a70fa3756b33';
+module.exports.PORT = process.env.PORT || 3000;
+module.exports.JWT_SECRET = process.env.JWT_SECRET || 'secret key';

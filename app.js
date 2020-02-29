@@ -1,12 +1,14 @@
 const express = require('express');
-require('dotenv').config();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
+const { PORT } = require('./secret');
 
-const { PORT = 3000 } = process.env;
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -20,15 +22,55 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(cookieParser());
+
+app.use(requestLogger);
+
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2),
+    avatar: Joi.string().uri().required(),
+  }),
+}), createUser);
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
 
 app.use(auth);
 app.use('/', users);
 app.use('/', cards);
 
-app.listen(PORT, () => {});
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Что то пошло не так, загрузка сервера  прервана');
+  }, 0);
+});
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
+
 app.all('/*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+
+app.use(errorLogger);
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).send({ message: err.message });
+  next();
+});
+
+app.listen(PORT, () => {});
