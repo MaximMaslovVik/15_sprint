@@ -1,7 +1,6 @@
+const express = require('express');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-
-const express = require('express');
 
 const { JWT_SECRET } = require('../secret');
 const Error401 = require('../errors/error_Auth');
