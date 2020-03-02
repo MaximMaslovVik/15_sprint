@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcryptjs');
 const Error401 = require('../errors/error_Auth');
+/* const isUrlValid = require ('url-validation');*/
 
 const validate = /^(https|http)?:\/\/(www.)?[^-_.\s](\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})?(:\d+)?(.+[#a-zA-Z/:0-9]{1,})?\.(.+[#a-zA-Z/:0-9]{1,})?$/i;
-const isUrlValid = require ( ' url-validation ' ) ;   
- 
-isUrlValid ( ' (https|http)?:\/\/(www.)?[^-_.\s](\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})?(:\d+)?(.+[#a-zA-Z/:0-9]{1,})?\.(.+[#a-zA-Z/:0-9]{1,})?.jpg ' ) ;
-// => правда
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
