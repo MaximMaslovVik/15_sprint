@@ -6,23 +6,23 @@ const { ObjectId } = mongoose.Types;
 const NotFoundError = require('../errors/error_not_found');
 const Error500 = require('../errors/error_500');
 
-module.exports.getAllCards = (req, res) => {
+module.exports.getAllCards = (req, res, next) => {
   Card.find({})
-    .then((card) => {
+    /* .then((card) => {
       if (card.length === 0) {
         throw new NotFoundError('База данных карточек пуста!');
-      }
-      return res.send({ data: card });
-    })
-    .catch(new Error500('Ошибка сервера'));
+      } */
+    .then((card) => res.send({ data: card }))
+  /* }) */
+    .catch(next(new Error500('Ошибка сервера')));
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   /* const owner = req.user._id; */
   const { name, link } = req.body;
   Card.create({ name, link })
     .then((card) => res.send({ data: card }))
-    .catch(new Error500({ message: 'Не удается создать карточку' }));
+    .catch(next(new Error500({ message: 'Не удается создать карточку' })));
 };
 
 module.exports.deleteCard = (req, res, next) => {

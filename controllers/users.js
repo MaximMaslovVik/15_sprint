@@ -10,7 +10,7 @@ const { JWT_SECRET } = require('../secret.js');
 
 // отправим токен, браузер сохранит его в куках
 
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
       if (user.length === 0) {
@@ -18,10 +18,9 @@ module.exports.getAllUsers = (req, res) => {
       }
       return res.send({ data: user });
     })
-    .catch((new Error500('На сервере произошла ошибка')));
+    .catch(next(new Error500('На сервере произошла ошибка')));
 };
-
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -31,11 +30,11 @@ module.exports.createUser = (req, res) => {
         name, about, avatar, email, password: hash,
       }))
       .then((user) => res.send({ data: user.omitPrivate() }))
-      .catch(new Error500('Не удалось создать пользователя'));
+      .catch(next(new Error500('Не удалось создать пользователя')));
   }
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((userId) => {
       if (!userId) {
@@ -44,10 +43,10 @@ module.exports.getUser = (req, res) => {
         res.send({ userId });
       }
     })
-    .catch(new Error500('Нет пользователя с таким id'));
+    .catch(next(new Error500('Нет пользователя с таким id')));
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -61,5 +60,5 @@ module.exports.login = (req, res) => {
         .send(token)
         .end();
     })
-    .catch(new Error401('Ошибка ввода'));
+    .catch(next(new Error401('Ошибка ввода')));
 };
