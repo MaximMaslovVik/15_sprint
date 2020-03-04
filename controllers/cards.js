@@ -4,17 +4,12 @@ const Card = require('../models/card');
 const { ObjectId } = mongoose.Types;
 
 const NotFoundError = require('../errors/error_not_found');
-const Error500 = require('../errors/error_500');
+const Error403 = require('../errors/error_403');
 
 module.exports.getAllCards = (req, res, next) => {
   Card.find({})
-    /* .then((card) => {
-      if (card.length === 0) {
-        throw new NotFoundError('База данных карточек пуста!');
-      } */
     .then((card) => res.send({ data: card }))
-  /* }) */
-    .catch(next(new Error500('Ошибка сервера')));
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -22,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link })
     .then((card) => res.send({ data: card }))
-    .catch(next(new Error500({ message: 'Не удается создать карточку' })));
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -38,11 +33,11 @@ module.exports.deleteCard = (req, res, next) => {
             .then((cardRemove) => res.send({ remove: cardRemove }))
             .catch(next);
         } else {
-          next(new NotFoundError('Это не ваша карта, не может быть удалена'));
+          next(new Error403('Это не ваша карта, не может быть удалена'));
         }
       } else {
         next(new NotFoundError('Карта не найдена'));
       }
     })
-    .catch(next(new Error500('На сервере произошла ошибка')));
+    .catch(next);
 };

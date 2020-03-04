@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const NotFoundError = require('../errors/error_not_found');
-const Error500 = require('../errors/error_500');
 const Error401 = require('../errors/error_Auth');
 const User = require('../models/user');
 
@@ -18,8 +17,9 @@ module.exports.getAllUsers = (req, res, next) => {
       }
       return res.send({ data: user });
     })
-    .catch(next(new Error500('На сервере произошла ошибка')));
+    .catch(next);
 };
+
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
@@ -30,7 +30,7 @@ module.exports.createUser = (req, res, next) => {
         name, about, avatar, email, password: hash,
       }))
       .then((user) => res.send({ data: user.omitPrivate() }))
-      .catch(next(new Error500('Не удалось создать пользователя')));
+      .catch(next);
   }
 };
 
@@ -43,7 +43,7 @@ module.exports.getUser = (req, res, next) => {
         res.send({ userId });
       }
     })
-    .catch(next(new Error500('Нет пользователя с таким id')));
+    .catch(next);
 };
 
 module.exports.login = (req, res, next) => {
