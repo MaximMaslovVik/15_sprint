@@ -13,9 +13,7 @@ module.exports = (req, res, next) => {
   if (!cookie) {
     return next(new Error401('Доступ запрещен. Необходима авторизация'));
   }
-
   let payload;
-
   try {
     payload = jwt.verify(cookie, JWT_SECRET);
     req.user = payload;
