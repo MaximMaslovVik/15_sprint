@@ -62,15 +62,15 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-app.all('/*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+app.all('/*', (req, res) => res.status(404).send('Запрашиваемый ресурс не найден'));
 
 app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  err.statusCode(500);
-  err.message('На сервере произошла ошибка');
-  res.status(err.statusCode || 500).send({ message: err.message });
+  /* err.statusCode(500);
+  err.message('На сервере произошла ошибка'); */
+  res.status(err.statusCode || 500).send({ message: err.message || 'На сервере произошла ошибка' });
   next();
 });
 
