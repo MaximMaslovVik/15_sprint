@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const NotFoundError = require('../errors/error_not_found');
-const Error401 = require('../errors/error_Auth');
+/* const Error401 = require('../errors/error_Auth'); */
 const User = require('../models/user');
 
 const { JWT_SECRET } = require('../secret.js');
@@ -13,7 +13,7 @@ module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
       if (user.length === 0) {
-        return (new NotFoundError({ message: 'База данных user пуста! ' }));
+        return (new NotFoundError('База данных user пуста!'));
       }
       return res.send({ data: user });
     })
@@ -38,7 +38,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((userId) => {
       if (!userId) {
-        throw new NotFoundError({ message: 'Такого пользователя нет' });
+        throw new NotFoundError('Такого пользователя нет');
       } else {
         res.send({ userId });
       }
@@ -60,5 +60,6 @@ module.exports.login = (req, res, next) => {
         .send(token)
         .end();
     })
-    .catch(next(new Error401('Ошибка ввода')));
+    /* .catch(next(new Error401('Ошибка ввода'))); */
+    .catch(next);
 };
