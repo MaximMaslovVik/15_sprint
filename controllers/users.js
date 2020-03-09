@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const NotFoundError = require('../errors/error_not_found');
-/* const Error401 = require('../errors/error_Auth'); */
+const Error401 = require('../errors/error_Auth');
 const User = require('../models/user');
 
 const { JWT_SECRET } = require('../secret.js');
@@ -60,6 +60,10 @@ module.exports.login = (req, res, next) => {
         .send(token)
         .end();
     })
-    /* .catch(next(new Error401('Ошибка ввода'))); */
-    .catch(next);
+    .catch((err) => {
+      if (err.message !== 'Неправильные почта или пароль') {
+        return next(err);
+      }
+      return next(new Error401(err.message));
+    });
 };
