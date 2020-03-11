@@ -13,6 +13,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     match: validate,
     required: true,
+    isUrlValid: true,
+
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

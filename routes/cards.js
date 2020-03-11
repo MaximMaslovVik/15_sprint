@@ -7,7 +7,7 @@ router.get('/cards', getAllCards);
 router.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2),
-    link: Joi.string().required(),
+    link: Joi.string().uri().required(),
   }),
 }), createCard);
 
