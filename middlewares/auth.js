@@ -20,5 +20,5 @@ module.exports = (req, res, next) => {
   } catch (err) {
     return next(new Error401('Доступ запрещен. Необходима авторизация'));
   }
-  next();
+  return next();
 };

@@ -25,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
   if (!ObjectId.isValid(cardId)) {
     return (new NotFoundError('not found'));
   }
-  Card.findById(req.params.cardId)
+  return Card.findById(req.params.cardId)
     .then((card) => {
       if (card) {
         if (card.owner.toString() === req.user._id) {
