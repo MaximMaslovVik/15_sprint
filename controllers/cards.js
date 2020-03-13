@@ -1,36 +1,43 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 
-module.exports.getAllCards = (req, res) => {
+const { ObjectId } = mongoose.Types;
+
+const NotFoundError = require('../errors/error_not_found');
+const Error403 = require('../errors/error_403');
+
+module.exports.getAllCards = (req, res, next) => {
   Card.find({})
-    .then((card) => {
-      if (card.length === 0) {
-        return res.status(404).send({ message: 'База данных cards пуста! ' });
-      }
-      return res.send({ data: card });
-    })
-    .catch((error) => res.status(500).send({ message: error.message }));
-};
-
-module.exports.createCard = (req, res) => {
-  const owner = req.user._id;
-  const { name, link } = req.body;
-  Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Не удается создать карточку' }));
+    .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
+  /* const owner = req.user._id; */
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: req.user._id })
+    .then((card) => res.send({ data: card }))
+    .catch(next);
+};
+
+module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  const ownerId = req.user._id;
-  Card.findById(cardId)
+  if (!ObjectId.isValid(cardId)) {
+    return (new NotFoundError('not found'));
+  }
+  return Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner.toString() === ownerId) {
-        Card.findByIdAndRemove(cardId)
-          .then((card) => res.send({ data: card }))
-          .catch(() => errorSend(res));
+      if (card) {
+        if (card.owner.toString() === req.user._id) {
+          Card.findByIdAndRemove(req.params.cardId)
+            .then((cardRemove) => res.send({ remove: cardRemove }))
+            .catch(next);
+        } else {
+          next(new Error403('Это не ваша карта, не может быть удалена'));
+        }
       } else {
-        return res.status(401).send({ message: 'Вы не имеете доступ к удалению чужих карточек' });
+        next(new NotFoundError('Карта не найдена'));
       }
     })
-    .catch(() => res.status(404).send({ message: 'Не найден объект с таким идентификатором' }));
+    .catch(next);
 };

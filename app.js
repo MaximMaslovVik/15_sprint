@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 
+const app = express();
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const app = express();
 const { PORT } = require('./secret');
 
 const users = require('./routes/users');
