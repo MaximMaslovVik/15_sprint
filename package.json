@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
-    "Logger": "0.0.0",
     "authorization-header": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -46,7 +45,6 @@
     "escape-html": "^1.0.3",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.19.1",
-    "express": "^4.17.1",
     "express-session": "^1.17.0",
     "express-validator": "^6.3.1",
     "express-winston": "^4.0.3",
@@ -56,7 +54,6 @@
     "joi-objectid": "^3.0.1",
     "jshint": "^2.11.0-rc1",
     "jsonwebtoken": "^8.5.1",
-    "logger": "0.0.1",
     "mongod": "^2.0.0",
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.5",
