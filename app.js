@@ -4,15 +4,15 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
-
 const app = express();
+
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const { PORT } = require('./secret');
 
 const users = require('./routes/users');
 const cards = require('./routes/cards');
-
+const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
