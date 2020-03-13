@@ -20,10 +20,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+app.use(requestLogger);
 
 app.use(cookieParser());
-
-app.use(requestLogger);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -63,13 +62,15 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-app.all('/*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+app.all('/*', (req, res) => res.status(404).send('Запрашиваемый ресурс не найден'));
 
 app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res.status(err.statusCode || 500).send({ message: err.message });
+  /* err.statusCode(500);
+  err.message('На сервере произошла ошибка'); */
+  res.status(err.statusCode || 500).send({ message: err.message || 'На сервере произошла ошибка' });
   next();
 });
 
