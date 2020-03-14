@@ -46,15 +46,15 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-app.use(auth);
-app.use('/', users);
-app.use('/', cards);
-
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Что то пошло не так, загрузка сервера  прервана');
   }, 0);
 });
+
+app.use(auth);
+app.use('/', users);
+app.use('/', cards);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
