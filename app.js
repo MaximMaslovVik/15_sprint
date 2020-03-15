@@ -69,8 +69,6 @@ app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  /* err.statusCode(500);
-  err.message('На сервере произошла ошибка'); */
   res.status(err.statusCode || 500).send({ message: err.message || 'На сервере произошла ошибка' });
   next();
 });
