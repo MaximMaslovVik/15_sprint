@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "node -r dotenv/config app.js"
+    "start": "node -r dotenv/config app.js",
+    "dev": "nodemon --exec 'node -r dotenv/config' app.js"
   },
   "repository": {
     "type": "git",
